@@ -10,8 +10,6 @@ void get_test_inputs(int test_number, int* test_counter, Map* test_map, int* tes
 
     printf("Filename: %s\n", filename);
 
-    int test_count = -1;
-
     file = fopen(filename, "r");
     if (file == NULL) {
         printf("Failed to Open Test File\n");
@@ -46,8 +44,7 @@ void get_test_inputs(int test_number, int* test_counter, Map* test_map, int* tes
 }
 
 void test_flood_fill_count(int test_number) {
-    int* expected_counter;
-    int x_dim, y_dim;
+    int* expected_counter = malloc(sizeof(int));
     int test_x, test_y;
     int count;
 
