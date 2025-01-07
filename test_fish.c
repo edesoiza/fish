@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <omp.h>
 #include "fish.h"
 
 void get_test_inputs(int test_number, int* test_counter, Map* test_map, int* test_x, int* test_y) {
@@ -34,12 +35,6 @@ void get_test_inputs(int test_number, int* test_counter, Map* test_map, int* tes
     }
     fclose(file);
 
-    for (int i = 0; i < (test_map->x_max); i++) {
-        for (int j = 0; j < (test_map->y_max); j++) {
-            printf("%c", test_map->data[i][j]);
-        }
-        printf("\n");
-    }
     return;
 }
 
@@ -59,8 +54,13 @@ void test_flood_fill_count(int test_number) {
     printf("Expected y: %d\n", test_y);
 
     printf("Running Test...\n");
-    count = flood_fill_count(world_map, test_x, test_y);
+    double start_time, end_time;
+    start_time = omp_get_wtime();
+    count = flood_fill_tree_count(world_map, test_x, test_y);
+    end_time = omp_get_wtime();
     printf("Test Complete\n");
+
+    printf("Time Taken for Test %d: %.5lf\n", test_number, end_time - start_time);
     
     printf("Expected Count: %d\n", *expected_counter);
     printf("Actual Count: %d\n", count);
@@ -78,6 +78,45 @@ void test_flood_fill_count(int test_number) {
     return;
 }
 
+void test_flood_fill_tree_count(int test_number) {
+    int* expected_counter = malloc(sizeof(int));
+    int test_x, test_y;
+    int count;
+
+    Map* world_map = malloc(sizeof(Map));
+
+    get_test_inputs(test_number, expected_counter, world_map, &test_x, &test_y);
+    if (*expected_counter == -1)
+        return;
+
+    printf("Expected Counter: %d\n", *expected_counter);
+    printf("Expected x: %d\n", test_x);
+    printf("Expected y: %d\n", test_y);
+
+    printf("Running Test...\n");
+    double start_time, end_time;
+    start_time = omp_get_wtime();
+    count = flood_fill_tree_count(world_map, test_x, test_y);
+    end_time = omp_get_wtime();
+    printf("Test Complete\n");
+
+    printf("Time Taken for Test %d: %.5lf\n", test_number, end_time - start_time);
+    
+    printf("Expected Count: %d\n", *expected_counter);
+    printf("Actual Count: %d\n", count);
+
+    if (count == *expected_counter)
+        printf("TEST PASSED\n");
+    else
+        printf("TEST FAILED\n");
+
+    for (int i = 0; i < world_map->x_max; i++)
+        free(world_map->data[i]);
+    free(world_map->data);
+    free(world_map);
+    return;
+}
+
 int main(int argc, char** argv) {
 
     if (argc < 2) {
@@ -87,5 +126,6 @@ int main(int argc, char** argv) {
 
     int test_number = atoi(argv[1]);
     test_flood_fill_count(test_number);
+    test_flood_fill_tree_count(test_number);
     return 0;
 }
