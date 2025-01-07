@@ -49,7 +49,7 @@ void _flood_fill_count(Map* world_map, int x, int y, int (*flood_options)[2], in
         y_shifted = y + flood_options[i][1];
         if (!(y_shifted >= world_map->y_min && y_shifted < world_map->y_max))
             continue;
-        valid_neighbors[i] = validate_point(world_map, x_shifted, y_shifted, counter, visited);
+        valid_neighbors[i] = validate_point(world_map, x_shifted, y_shifted, visited);
         printf("processed (%d,%d): %d\n", x_shifted, y_shifted, valid_neighbors[i]);
     }
 
@@ -67,7 +67,7 @@ void _flood_fill_count(Map* world_map, int x, int y, int (*flood_options)[2], in
     return;
 }
 
-bool validate_point(Map* world_map, int x, int y, int* counter, LinkedList* visited) {
+bool validate_point(Map* world_map, int x, int y, LinkedList* visited) {
         
     if (world_map->data[x][y] == '0')
         return false;

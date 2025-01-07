@@ -18,7 +18,7 @@ typedef struct {
 
 int flood_fill_count(Map* world_map, int start_x, int start_y);
 void _flood_fill_count(Map* world_map, int x, int y, int (*shift_options)[2], int* counter, LinkedList* visited);
-bool validate_point(Map* world_map, int x, int y, int* counter, LinkedList* visited);
+bool validate_point(Map* world_map, int x, int y, LinkedList* visited);
 void free_sub_node(LLNode* sub_node);
 void free_node(LLNode* node);
 void free_visited(LinkedList* visited);
